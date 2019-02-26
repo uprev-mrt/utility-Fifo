@@ -5,15 +5,15 @@
    \@date 05/03/2017
 */
 
-#include <stdlib>
+
 #include "Fifo.h"
 
 
 
-#define FIFO_LOCK pFifo->lock =1//while(pFifo->lock){delay_ms(1);} pFifo->lock = 1
-#define FIFO_UNLOCK pFifo->lock = 0
+#define FIFO_LOCK pFifo->mLock =1//while(pFifo->lock){delay_ms(1);} pFifo->lock = 1
+#define FIFO_UNLOCK pFifo->mLock = 0
 
-void fifo_init(fifo_t* c, int depth, int width)
+void fifo_init(fifo_t* pFifo, int depth, int width)
 {
   pFifo->mBuffer = (uint8_t*) malloc(depth * width);
   pFifo->mHead = 0;
@@ -23,7 +23,7 @@ void fifo_init(fifo_t* c, int depth, int width)
   pFifo->mObjSize = width;
 }
 
-void fifo_deinit(fifo_t* c)
+void fifo_deinit(fifo_t* pFifo)
 {
   free(pFifo->mBuffer);
 }
@@ -92,7 +92,7 @@ int fifo_push_buf( fifo_t* pFifo, void * data, int len)
   int result = 0;
   for(int i=0; i < len; i++)
   {
-    result = fifo_push(pFifo->,&data[i * pFifo->mObjSize]);
+    result = fifo_push(pFifo,&data[i * pFifo->mObjSize]);
   }
   return result;
 }
@@ -102,7 +102,7 @@ int fifo_pop_buf( fifo_t* pFifo, void* data, int len)
   int result = 0;
   for(int i=0; i < len; i++)
   {
-    result = fifo_pop(pFifo->, &data[i * pFifo->mObjSize]);
+    result = fifo_pop(pFifo, &data[i * pFifo->mObjSize]);
   }
   return result;
 }
@@ -116,7 +116,7 @@ int fifo_clear( fifo_t* pFifo)
   //but it should be a rare case and this utilizes locks in place
   while(pFifo->mCount > 0)
   {
-    fifo_pop(pFifo->,trash);
+    fifo_pop(pFifo,trash);
   }
   free(trash);
 }
