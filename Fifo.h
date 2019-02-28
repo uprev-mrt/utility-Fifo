@@ -20,7 +20,7 @@
  *@return "Return of the function"
  */
 #define FIFO_DEF(x,y,z)             \
-  uint8_t x##_data[y*sizeof(z)];    \
+  z x##_data[y];    \
   fifo_t x = {                      \
         .mBuffer = x##_data,        \
         .mHead = 0,                 \
@@ -114,6 +114,7 @@ extern "C"
 
 
 fifo_t* new_fifo( int objSize, int len);
+void fifo_init(fifo_t* pFifo, int depth, int width);
 void fifo_destroy(fifo_t* pFifo);
 int fifo_push(fifo_t* pFifo, void* data);
 int fifo_pop(fifo_t* pFifo, void* data);

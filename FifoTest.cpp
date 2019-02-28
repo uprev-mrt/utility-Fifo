@@ -1,4 +1,9 @@
-
+/**
+  *@file FifoTest.cpp
+  *@brief unit tests for the Fifo class
+  *@author Jason Berger
+  *@date 02/16/2019
+  */
 #ifdef UNIT_TESTING_ENABLED
 
 #include "Fifo.cpp"

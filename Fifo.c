@@ -13,6 +13,15 @@
 #define FIFO_LOCK pFifo->mLock =1//while(pFifo->lock){delay_ms(1);} pFifo->lock = 1
 #define FIFO_UNLOCK pFifo->mLock = 0
 
+
+fifo_t* new_fifo( int objSize, int len)
+{
+    fifo_t* fifo = (fifo_t*) malloc(sizeof(fifo_t));
+    fifo_init(fifo, len, objSize);
+
+    return fifo;
+}
+
 void fifo_init(fifo_t* pFifo, int depth, int width)
 {
   pFifo->mBuffer = (uint8_t*) malloc(depth * width);
