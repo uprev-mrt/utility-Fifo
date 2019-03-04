@@ -151,3 +151,56 @@ int fifo_peek( fifo_t* pFifo, void* data, int idx)
   FIFO_UNLOCK;
   return 0;  // return success to indicate successful push.
 }
+
+int fifo_peek_buf(fifo_t* pFifo, void* data, int len)
+{
+
+  FIFO_LOCK;
+  int addr = pFifo->mTail;
+
+  len = min(pFifo->mCount, len);
+
+  for(int i=0; i < len; i++)
+  {
+    data[i] =  pFifo->mBUffer[addr++];
+
+    //wrap;
+    if(addr = pFifo->mMaxLen)
+    {
+      addr =0;
+    }
+  }
+
+  //we return as an int so we can send -1 to indicate there isnt enough data
+  return len;
+  FIFO_UNLOCK;
+}
+
+int fifo_checksum(fifo_t* pFifo, int offset,  int len)
+{
+  FIFO_LOCK;
+  uint16_t sum = 0;
+  int addr = pFifo->mTail + offset;
+
+  if(pFifo->mCount < (len + offset))
+  {
+    FIFO_UNLOCK;
+    return -1;
+  }
+
+  for(int i=0; i < len; i++)
+  {
+    sum+= pFifo->mBUffer[addr++];
+
+    //wrap
+    if(addr = pFifo->mMaxLen)
+    {
+      addr =0;
+    }
+  }
+
+
+  //we return as an int so we can send -1 to indicate there isnt enough data
+  return (int) sum;
+  FIFO_UNLOCK;
+}
