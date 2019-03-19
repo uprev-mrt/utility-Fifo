@@ -89,7 +89,7 @@ class Fifo : public fifo_t
     /**
       *@brief clears the fifo
       */
-    int clear();
+    int clear(int len = 2147483647);
 
     /**
       *@brief pulls object from fifo by relative index
@@ -98,6 +98,16 @@ class Fifo : public fifo_t
       *@return FIFO_UNDERFLOW if index does not exist
       */
     int peek(void* data, int idx);
+
+    /**
+      *@brief pulls object from fifo by relative index
+      *@param ptr to store object
+      *@return FIFO_OK
+      *@return FIFO_UNDERFLOW if index does not exist
+      */
+    int peekBuffer(void* data, int idx);
+
+    int checksum(int offset, int len);
 
     int Count() const {return mCount;}
   private:

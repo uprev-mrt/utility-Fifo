@@ -7,12 +7,14 @@
 
 
 #include "Fifo.h"
+#include <stdlib.h>
 
 
+#define FIFO_LOCK //pFifo->mLock =1//while(pFifo->lock){delay_ms(1);} pFifo->lock = 1
+#define FIFO_UNLOCK //pFifo->mLock = 0
 
-#define FIFO_LOCK pFifo->mLock =1//while(pFifo->lock){delay_ms(1);} pFifo->lock = 1
-#define FIFO_UNLOCK pFifo->mLock = 0
-
+#define min(X,Y) (((X) < (Y)) ? (X) : (Y))
+#define max(X,Y) (((X) > (Y)) ? (X) : (Y))
 
 fifo_t* new_fifo( int objSize, int len)
 {
@@ -30,6 +32,7 @@ void fifo_init(fifo_t* pFifo, int depth, int width)
   pFifo->mMaxLen = depth;
   pFifo->mCount = 0;
   pFifo->mObjSize = width;
+  pFifo->mLock = 0;
 }
 
 void fifo_deinit(fifo_t* pFifo)
@@ -167,9 +170,11 @@ int fifo_peek_buf(fifo_t* pFifo, void* data, int len)
 
   len = min(pFifo->mCount, len);
 
+  len*=pFifo->mObjSize;
+
   for(int i=0; i < len; i++)
   {
-    data[i] =  pFifo->mBUffer[addr++];
+    data[i] =  pFifo->mBuffer[addr++];
 
     //wrap;
     if(addr = pFifo->mMaxLen)
@@ -179,8 +184,8 @@ int fifo_peek_buf(fifo_t* pFifo, void* data, int len)
   }
 
   //we return as an int so we can send -1 to indicate there isnt enough data
-  return len;
   FIFO_UNLOCK;
+  return len;
 }
 
 int fifo_checksum(fifo_t* pFifo, int offset,  int len)
@@ -197,7 +202,7 @@ int fifo_checksum(fifo_t* pFifo, int offset,  int len)
 
   for(int i=0; i < len; i++)
   {
-    sum+= pFifo->mBUffer[addr++];
+    sum+= pFifo->mBuffer[addr++];
 
     //wrap
     if(addr = pFifo->mMaxLen)
@@ -208,6 +213,6 @@ int fifo_checksum(fifo_t* pFifo, int offset,  int len)
 
 
   //we return as an int so we can send -1 to indicate there isnt enough data
-  return (int) sum;
   FIFO_UNLOCK;
+  return (int) sum;
 }

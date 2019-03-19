@@ -80,6 +80,20 @@ TEST(FifoTest_c, Overflow_c)
   ASSERT_EQ(testSize, test_fifo_c->mCount);
 }
 
+//Verify Overflow handling
+TEST(FifoTest_c, PeekBuffer_c)
+{
+  uint8_t peekBuf[10];
+
+  fifo_peek_buf(test_fifo_c,peekBuf, 10);
+
+  for(int i =0; i < 10; i++)
+  {
+    ASSERT_EQ(i, peekBuf[i]);
+  }
+
+}
+
 //Test popping data from fifo
 TEST(FifoTest_c, Pop_c)
 {
