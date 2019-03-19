@@ -116,18 +116,25 @@ int fifo_pop_buf( fifo_t* pFifo, void* data, int len)
   return result;
 }
 
-int fifo_clear( fifo_t* pFifo)
+int fifo_clear( fifo_t* pFifo, int len)
 {
   //create trash bin based on objsize
   uint8_t* trash = malloc(pFifo->mObjSize);
 
+  if(len > pFifo->mCount)
+    len = pFifo->mCount;
+
   //there are more effecient ways to do this
   //but it should be a rare case and this utilizes locks in place
-  while(pFifo->mCount > 0)
+  while(len > 0)
   {
     fifo_pop(pFifo,trash);
+    len--;
   }
+  //free up  trash memory
   free(trash);
+
+  return len;
 }
 
 int fifo_peek( fifo_t* pFifo, void* data, int idx)

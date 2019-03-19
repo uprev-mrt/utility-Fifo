@@ -120,7 +120,7 @@ int fifo_push(fifo_t* pFifo, void* data);
 int fifo_pop(fifo_t* pFifo, void* data);
 int fifo_push_buf(fifo_t* pFifo, void* data, int len);
 int fifo_pop_buf(fifo_t* pFifo, void* data, int len);
-int fifo_clear(fifo_t* pFifo);
+int fifo_clear(fifo_t* pFifo, int len);
 int fifo_peek(fifo_t* pFifo, void* data, int idx);
 int fifo_peek_buf(fifo_t* pFifo, void* data, int len);
 int fifo_checksum(fifo_t* pFifo, int offset, int len);
