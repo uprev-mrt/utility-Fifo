@@ -209,7 +209,7 @@ int fifo_checksum(fifo_t* pFifo, int offset,  int len)
     sum+= pFifo->mBuffer[addr++];
 
     //wrap
-    if(addr = pFifo->mMaxLen)
+    if(addr == pFifo->mMaxLen)
     {
       addr =0;
     }
