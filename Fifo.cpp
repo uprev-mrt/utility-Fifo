@@ -6,7 +6,7 @@
 */
 
 #include <stdlib.h>
-#include "Fifo.h"
+#include "Fifo.hpp"
 
 
 #ifndef MRT_MUTEX_LOCK
