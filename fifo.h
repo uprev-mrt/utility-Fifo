@@ -43,7 +43,7 @@ typedef struct {
 
 fifo_t* new_fifo( int objSize, int len);
 void fifo_init(fifo_t* pFifo, int depth, int width);
-void fifo_destroy(fifo_t* pFifo);
+void fifo_deinit(fifo_t* pFifo);
 int fifo_push(fifo_t* pFifo, void* data);
 int fifo_pop(fifo_t* pFifo, void* data);
 int fifo_push_buf(fifo_t* pFifo, void* data, int len);
