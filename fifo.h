@@ -14,20 +14,20 @@
 #define FIFO_UNDERFLOW -2
 /**
  *@brief creates fifo
- *@param x : name of fifo buffer
- *@param y : max number of elements in buffer
- *@param z : datatype
+ *@param name : name of fifo buffer
+ *@param len : max number of elements in buffer
+ *@param type : datatype
  *@return "Return of the function"
  */
-#define FIFO_DEF(x,y,z)             \
-  z x##_data[y];    \
-  fifo_t x = {                      \
-        .mBuffer = x##_data,        \
+#define FIFO_DEF(name,len,type)     \
+  type name##_data[len];            \
+  fifo_t name = {                      \
+        .mBuffer = name##_data,        \
         .mHead = 0,                 \
         .mTail = 0,                 \
-        .mMaxLen = y,               \
+        .mMaxLen = len,             \
         .mCount = 0,                \
-        .mObjSize = sizeof(z)	      \
+        .mObjSize = sizeof(type)	\
     };
 
 typedef struct {
@@ -41,14 +41,64 @@ typedef struct {
 } fifo_t;
 
 
-fifo_t* new_fifo( int objSize, int len);
+/**
+ * @brief initialize fifo
+ * @param pFifo ptr to fifo_t
+ * @param depth number of items to to store in fifo
+ * @param width size of items in fifo (in bytes)
+ */
 void fifo_init(fifo_t* pFifo, int depth, int width);
+
+/**
+ * @brief deinitialize fifo
+ * @param pFifo ptr to fifo
+ */
 void fifo_deinit(fifo_t* pFifo);
+
+/**
+ * @brief push a single 'object' into the fifo
+ * @param pFifo ptr to fifo
+ * @param data ptr to obj to add to fifo
+ * @return FIFO_OK on success  
+ */
 int fifo_push(fifo_t* pFifo, void* data);
+
+/**
+ * @brief pops the next obj from the fifo
+ * 
+ * @param pFifo ptr to fifo
+ * @param data ptr to store obj
+ * @return FIFO_OK on success  
+ */
 int fifo_pop(fifo_t* pFifo, void* data);
+
+/**
+ * @brief push a buffer of objects into fifo
+ * @param pFifo ptr to fifo
+ * @param data ptr to objects to add to fifo
+ * @param len number of objects to add to fifo
+ * @return FIFO_OK on success 
+ */
 int fifo_push_buf(fifo_t* pFifo, void* data, int len);
+
+/**
+ * @brief retrieve a buffer of objects from the fifo
+ * @param pFifo ptr to fifo
+ * @param data ptr to store objects
+ * @param len number of objects to retrieve
+ * @return FIFO_OK on success 
+ */
 int fifo_pop_buf(fifo_t* pFifo, void* data, int len);
+
+/**
+ * @brief deletes objects from fifo
+ * @param pFifo ptr to fifo
+ * @param len number of objects to remove
+ * @return int 
+ */
 int fifo_clear(fifo_t* pFifo, int len);
+
+
 int fifo_peek(fifo_t* pFifo, void* data, int idx);
 int fifo_peek_buf(fifo_t* pFifo, void* data, int len);
 int fifo_checksum(fifo_t* pFifo, int offset, int len);

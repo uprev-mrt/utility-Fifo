@@ -17,13 +17,6 @@
 #define fifo_min(X,Y) (((X) < (Y)) ? (X) : (Y))
 #define fifo_max(X,Y) (((X) > (Y)) ? (X) : (Y))
 
-fifo_t* new_fifo( int objSize, int len)
-{
-    fifo_t* fifo = (fifo_t*) malloc(sizeof(fifo_t));
-    fifo_init(fifo, len, objSize);
-
-    return fifo;
-}
 
 void fifo_init(fifo_t* pFifo, int depth, int width)
 {
@@ -106,7 +99,7 @@ int fifo_push_buf( fifo_t* pFifo, void* data, int len)
   uint8_t* cast = (uint8_t*) data;
   for(int i=0; i < len; i++)
   {
-    result = fifo_push(pFifo,&cast[i * pFifo->mObjSize]);
+    result |= fifo_push(pFifo,&cast[i * pFifo->mObjSize]);
   }
   return result;
 }
@@ -117,7 +110,7 @@ int fifo_pop_buf( fifo_t* pFifo, void* data, int len)
   uint8_t* cast = (uint8_t*) data;
   for(int i=0; i < len; i++)
   {
-    result = fifo_pop(pFifo, &cast[i * pFifo->mObjSize]);
+    result |= fifo_pop(pFifo, &cast[i * pFifo->mObjSize]);
   }
   return result;
 }
