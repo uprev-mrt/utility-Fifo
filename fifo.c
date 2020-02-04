@@ -41,7 +41,7 @@ int fifo_push( fifo_t* pFifo, void* data)
     // next is where head will point to after this write.
     int next = pFifo->mHead + 1;
 
-    if (next > pFifo->mMaxLen)
+    if (next >= pFifo->mMaxLen)
     {
         next = 0;
     }
@@ -76,7 +76,7 @@ int fifo_pop( fifo_t* pFifo, void* data)
 
     // next is where tail will point to after this read.
     int next = pFifo->mTail + 1;
-    if (next > pFifo->mMaxLen)
+    if (next >= pFifo->mMaxLen)
     {
         next = 0;
     }

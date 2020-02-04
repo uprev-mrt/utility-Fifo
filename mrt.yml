@@ -1,0 +1,5 @@
+---
+name: fifo
+description: generic fifo utility
+category: utility
+requires: []
