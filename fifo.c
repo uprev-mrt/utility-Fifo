@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 #define FIFO_LOCK //pFifo->mLock =1//while(pFifo->lock){delay_ms(1);} pFifo->lock = 1
 #define FIFO_UNLOCK //pFifo->mLock = 0
 
@@ -38,39 +37,39 @@ int fifo_push( fifo_t* pFifo, void* data)
 {
 	FIFO_LOCK;
 
-    // next is where head will point to after this write.
-    int next = pFifo->mHead + 1;
-
-    if (next >= pFifo->mMaxLen)
+    if (pFifo->mCount >= pFifo->mMaxLen) /* check if fifo is full */
     {
-        next = 0;
-    }
-    if (next == pFifo->mTail) // check if circular buffer is full
-    {
-		FIFO_UNLOCK;
+		    FIFO_UNLOCK;
         return FIFO_OVERFLOW;
     }
 
-    pFifo->mCount++;
+    int next = pFifo->mHead + 1;                          /*next is where head will point to after this write*/
 
-    int addr = pFifo->mHead * pFifo->mObjSize;
-    memcpy(&pFifo->mBuffer[addr], data, pFifo->mObjSize); // Load data and then move
+    if (next >= pFifo->mMaxLen)                           /* wrap head at end of buffer*/
+    {
+        next = 0;
+    }
+
+    pFifo->mCount++;                                      /* increment count*/
+
+    int addr = pFifo->mHead * pFifo->mObjSize;            /* get address of current object*/
+    memcpy(&pFifo->mBuffer[addr], data, pFifo->mObjSize); /* Copy object into next     */
 
 
-    pFifo->mHead = next;            // head to next data offset.
+    pFifo->mHead = next;                                  /* set head to next */
 
     FIFO_UNLOCK;
 
-    return 0;  // return success to indicate successful push.
+    return FIFO_OK;  // return success to indicate successful push.
 }
 
 int fifo_pop( fifo_t* pFifo, void* data)
 {
 	FIFO_LOCK;
     // if the head isn't ahead of the tail, we don't have any characters
-    if (pFifo->mHead == pFifo->mTail) // check if circular buffer is empty
+    if (pFifo->mCount <= 0) // check if circular buffer is empty
     {
-		FIFO_UNLOCK;
+		    FIFO_UNLOCK;
         return FIFO_UNDERFLOW;          // and return with an error
     }
 
@@ -90,7 +89,7 @@ int fifo_pop( fifo_t* pFifo, void* data)
     }
     FIFO_UNLOCK;
 
-    return 0;  // return success to indicate successful push.
+    return FIFO_OK;  // return success to indicate successful push.
 }
 
 int fifo_push_buf( fifo_t* pFifo, void* data, int len)
