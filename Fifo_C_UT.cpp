@@ -77,4 +77,9 @@ TEST(FifoTest_c, Underflow_c)
     ASSERT_EQ(0, test_fifo_c.mCount);
 }
 
+TEST(FifoTest_c, cleanup)
+{
+  fifo_deinit(&test_fifo_c);
+}
+
 #endif
